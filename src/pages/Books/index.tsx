@@ -5,20 +5,6 @@ import  { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../../components/Card";
 import { useParams } from "react-router-dom";
-// Sample array of book objects
-const books = [
-  { title: "THE OLD MAN AND THE SEA", author: "Charles Dickens", image: "image_url_1" },
-  { title: "THE BELIAL STONE", author: "R.D Brady", image: "image_url_2" },
-  { title: "REACTION - THE END OF IRON AGE", author: "Seth M Baker", image: "image_url_3" },
-  { title: "GREAT EXPECTATIONS", author: "Charles Dickens", image: "image_url_4" },
-  { title: "A CHRISTMAS CAROL", author: "Charles Dickens", image: "image_url_5" },
-  { title: "HARRY POTTER AND THE HALF BLOOD PRINCE", author: "J.K Rowling", image: "image_url_6" },
-  { title: "OLIVER TWIST", author: "Charles Dickens", image: "image_url_7" },
-  { title: "THE ADVENTURES OF TOM SAWYER", author: "Mark Twain", image: "image_url_8" },
-  { title: "PERCY JACKSON AND THE OLYMPIANS", author: "Rick Riordan", image: "image_url_9" },
-  { title: "THE BEASTS OF THE BLACK HOLE", author: "Paul Parker", image: "image_url_10" },
-  { title: "A TALE OF TWO CITIES", author: "Charles Dickens", image: "image_url_11" },
-];
 
 // Styled components for the Books layout
 const Container = styled.div`
@@ -65,13 +51,15 @@ const GridContainer = styled.div`
 
 `;
 
+type Book = {
+  title: string;
+  authors: [{name: string}];
+  formats: { 'image/jpeg': string };
+};
+
 const Books = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [globalBooks, setGlobalBooks] = useState([])
-  // Filter books based on search term
-  const filteredBooks = books.filter(book =>
-    book.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const [globalBooks, setGlobalBooks] = useState<Book[]>([]);
 
   const { page } = useParams();
 
@@ -106,7 +94,7 @@ const Books = () => {
       </SearchContainer>
       <GridContainer>
         {globalBooks.map((book, index) => {
-          return <Card key={index} title={book.title} author={book.authors[0]} formats={book.formats} />
+          return <Card key={index} title={book.title} authors={book.authors[0]} formats={book.formats} />
         })}
       </GridContainer>
     </Container>

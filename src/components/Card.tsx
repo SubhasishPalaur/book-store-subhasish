@@ -36,17 +36,16 @@ const CardAuthor = styled.p`
 // Card component props interface
 interface CardProps {
   title: string;
-  author: object;
-  image: object;
+  authors: { name: string }; 
+  formats: { 'image/jpeg': string };
 }
 
-const Card: React.FC<CardProps> = ({ title, author, formats }) => {
-    console.log(author, formats, title)
+const Card: React.FC<CardProps> = ({ title, authors, formats }) => {
   return (
     <CardContainer>
       <CardImage src={formats['image/jpeg']} alt={title} />
       <CardTitle>{title}</CardTitle>
-      <CardAuthor>{author && author['name']}</CardAuthor>
+      <CardAuthor>{authors && authors['name']}</CardAuthor>
     </CardContainer>
   );
 };
