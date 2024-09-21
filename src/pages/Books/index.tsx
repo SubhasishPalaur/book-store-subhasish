@@ -71,6 +71,9 @@ const Books = () => {
 
   const getData = async (query = '') => {
     try {
+      const v = await fetch('http://skunkworks.ignitesol.com:8000/books')
+      const k = await v.json()
+      console.log(k)
       const url = query
         ? `http://skunkworks.ignitesol.com:8000/books?search=${query}`
         : `http://skunkworks.ignitesol.com:8000/books?topic=${page}`;
