@@ -72,8 +72,7 @@ const Books = () => {
   const getData = async (query = '') => {
     try {
       const v = await fetch('/api/')
-      const k = await v.json()
-      console.log(k)
+      console.log(v)
       const url = query
         ? `/api/?search=${query}`
         : `/api/?topic=${page}`;
