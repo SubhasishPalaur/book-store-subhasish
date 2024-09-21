@@ -74,8 +74,8 @@ const Books = () => {
       const v = await fetch('/api/')
       console.log(v)
       const url = query
-        ? `/api/?search=${query}`
-        : `/api/?topic=${page}`;
+        ? `http://skunkworks.ignitesol.com:8000/books/?search=${query}`
+        : `http://skunkworks.ignitesol.com:8000/books//?topic=${page}`;
       
       const response = await fetch(url);
       const data = await response.json();
