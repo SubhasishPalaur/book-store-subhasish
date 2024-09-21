@@ -3,8 +3,3 @@
   to = "http://skunkworks.ignitesol.com:8000/books/:splat"
   status = 200
   force = true
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
