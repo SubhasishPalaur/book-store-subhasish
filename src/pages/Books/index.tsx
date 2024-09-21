@@ -4,7 +4,8 @@
 import  { useEffect, useState } from "react";
 import styled from "styled-components";
 import Card from "../../components/Card";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import backarrow from "../../assets/Back.svg"
 
 // Styled components for the Books layout
 const Container = styled.div`
@@ -17,10 +18,11 @@ const Container = styled.div`
 `;
 
 const Heading = styled.h1`
-  color: #6b52ae;
+  color: #5E56E7;
   font-size: 2rem;
   font-family: Montserrat;
   display: flex;
+  cursor: pointer;
   align-items: center;
   gap: 10px;
 `;
@@ -49,6 +51,10 @@ const GridContainer = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 20px;
 
+  @media(max-width : 500px){
+  gap: 0;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  }
 `;
 
 type Book = {
@@ -60,28 +66,48 @@ type Book = {
 const Books = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [globalBooks, setGlobalBooks] = useState<Book[]>([]);
-
+  const navigate = useNavigate()
   const { page } = useParams();
 
-  const getData = async () => {
+  const getData = async (query = '') => {
     try {
-      const response = await fetch(`http://skunkworks.ignitesol.com:8000/books?topic=${page}`);
+      const url = query
+        ? `http://skunkworks.ignitesol.com:8000/books?search=${query}`
+        : `http://skunkworks.ignitesol.com:8000/books?topic=${page}`;
+      
+      const response = await fetch(url);
       const data = await response.json();
       console.log(data, page);
-      setGlobalBooks(data.results)
+      setGlobalBooks(data.results);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
   useEffect(() => {
-    getData();
-  }, [page]); 
+    const delayDebounceFn = setTimeout(() => {
+      if (searchTerm.trim() !== '') {
+        getData(searchTerm);
+      } else {
+        getData();
+      }
+    }, 500); // 500ms debounce
+  
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchTerm, page]);
+
+  const redirectToLastpage = () => {
+    navigate('/')
+  }
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   return (
     <Container>
-      <Heading>
-        <BackArrow>&larr;</BackArrow>
+      <Heading onClick={()=> redirectToLastpage()}>
+        <BackArrow><img src={backarrow} alt="back arrow" style={{height: '16px', width: '16px'}}/></BackArrow>
         {page}
       </Heading>
       <SearchContainer>
@@ -89,7 +115,7 @@ const Books = () => {
           type="text"
           placeholder="Search"
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearch}
         />
       </SearchContainer>
       <GridContainer>

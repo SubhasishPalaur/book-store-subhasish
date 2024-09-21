@@ -37,13 +37,24 @@ const CardAuthor = styled.p`
 interface CardProps {
   title: string;
   authors: { name: string }; 
-  formats: { 'image/jpeg': string };
+  formats: any
 }
 
 const Card: React.FC<CardProps> = ({ title, authors, formats }) => {
+    const openDetails = () => {
+        const priorityOrder = ["text/html", "application/pdf", "text/plain"];
+
+  for (let format of priorityOrder) {
+    if (formats[format]) {
+      window.open(formats[format], "_blank");
+      return;
+    }
+  }
+  alert("No preferred format available.");
+    }
   return (
     <CardContainer>
-      <CardImage src={formats['image/jpeg']} alt={title} />
+      <CardImage src={formats['image/jpeg']} alt={title} onClick={()=>openDetails()}/>
       <CardTitle>{title}</CardTitle>
       <CardAuthor>{authors && authors['name']}</CardAuthor>
     </CardContainer>
