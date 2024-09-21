@@ -71,11 +71,11 @@ const Books = () => {
 
   const getData = async (query = '') => {
     try {
-      const v = await fetch('/api/')
+      const v = await fetch('/api/books')
       console.log(v)
       const url = query
-        ? `/api/?search=${query}`
-        : `/api/?topic=${page}`;
+        ? `/api/books?search=${query}`
+        : `/api/books?topic=${page}`;
       
       const response = await fetch(url);
       const data = await response.json();
