@@ -1,2 +1,0 @@
-# Redirect for books API
-/api/* http://skunkworks.ignitesol.com:8000/:splat  200
