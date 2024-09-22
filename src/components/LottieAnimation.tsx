@@ -2,14 +2,6 @@ import animationData from '../assets/loader_lottie.json';
 import Lottie from 'lottie-react';
 
 const LottieAnimation = () => {
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData, 
-    rendererSettings: {
-      preserveAspectRatio: 'xMidYMid slice'
-    }
-  };
 
   return (
     <div style={{height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
