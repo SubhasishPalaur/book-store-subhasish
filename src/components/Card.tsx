@@ -23,6 +23,7 @@ const CardTitle = styled.h3`
   font-size: 1rem;
   font-weight: bold;
   margin: 10px 0 5px;
+  font-family: Montserrat; 
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

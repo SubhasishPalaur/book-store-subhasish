@@ -6,12 +6,13 @@ import styled from "styled-components";
 import Card from "../../components/Card";
 import { useNavigate, useParams } from "react-router-dom";
 import backarrow from "../../assets/Back.svg"
+import LottieAnimation from "../../components/LottieAnimation"
 
 // Styled components for the Books layout
 const Container = styled.div`
   padding: 20px 150px;
   background-color: #f8f7ff;
-
+  height: 100vh;
   @media (max-width: 768px) {
     padding: 20px;
   }
@@ -63,28 +64,36 @@ type Book = {
   formats: { 'image/jpeg': string };
 };
 
+let apiUrl : string 
+if (process.env.NODE_ENV === 'development') {
+  apiUrl = 'http://skunkworks.ignitesol.com:8000/books/'
+} else if (process.env.NODE_ENV === 'production') {
+  apiUrl = '/api/'
+}
 const Books = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [globalBooks, setGlobalBooks] = useState<Book[]>([]);
+  const [loading, setLoading] = useState(true)
   const navigate = useNavigate()
   const { page } = useParams();
 
   const getData = async (query = '') => {
     try {
       const url = query
-        ? `/api/?search=${query}`
-        : `/api/?topic=${page}`;
+        ? `${apiUrl}?search=${query}`
+        : `${apiUrl}?topic=${page}`;
       
       const response = await fetch(url);
       const data = await response.json();
-      console.log(data, page);
       setGlobalBooks(data.results);
+      setLoading(false)
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
 
   useEffect(() => {
+    setLoading(true)
     const delayDebounceFn = setTimeout(() => {
       if (searchTerm.trim() !== '') {
         getData(searchTerm);
@@ -110,19 +119,23 @@ const Books = () => {
         <BackArrow><img src={backarrow} alt="back arrow" style={{height: '16px', width: '16px'}}/></BackArrow>
         {page}
       </Heading>
-      <SearchContainer>
-        <SearchBar
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={handleSearch}
-        />
-      </SearchContainer>
-      <GridContainer>
-        {globalBooks.map((book, index) => {
-          return <Card key={index} title={book.title} authors={book.authors[0]} formats={book.formats} />
-        })}
-      </GridContainer>
+      {/* <Suspense fallback={<LottieAnimation/>}> */}
+      {loading ? <LottieAnimation/>:<>
+        <SearchContainer>
+          <SearchBar
+            type="text"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </SearchContainer>
+        <GridContainer>
+          {globalBooks.map((book, index) => {
+            return <Card key={index} title={book.title} authors={book.authors[0]} formats={book.formats} />
+          })}
+        </GridContainer>
+      </>}
+      {/* </Suspense> */}
     </Container>
   );
 };

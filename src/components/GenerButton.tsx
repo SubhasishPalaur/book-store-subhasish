@@ -12,7 +12,6 @@ interface Details {
   }
 
 export function GenerButton({ details }: GenerButtonProps) {
-  console.log(details);
   const navigate = useNavigate()
   const navigateToBooks = () => {
     navigate(`/books/${details.name}`)
